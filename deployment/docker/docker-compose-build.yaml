@@ -1,0 +1,5 @@
+version: '3'
+services:
+  hello_world_app:
+    build: ../../app
+    image: ${USERNAME}/jaeger-tracing-example

@@ -1,0 +1,30 @@
+---
+name: Docker Image CI
+
+on:
+  workflow_dispatch: # Run workflow manually (without waiting for the cron to be called), through the Github Actions Workflow page directly
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Build the Docker image
+        run: |
+          export USERNAME=${{ github.repository_owner }}
+          docker-compose -f deployment/docker/docker-compose-build.yaml build
+
+      - name: Login and Push Docker images to docker-registry
+        run: |
+          export USERNAME=${{ github.repository_owner }}
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker-compose -f deployment/docker/docker-compose-build.yaml push
