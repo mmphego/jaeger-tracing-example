@@ -74,11 +74,17 @@ def writeredis():
     redis_opentracing.trace_client(redis_db)
     r = requests.get("https://www.google.com/search?q=python")
     a_dict = {}
+
     # put the first 50 results into a_dict
-    for key, value in r.headers.items()[:50]:
-        print(key, ":", value)
+    for key, value in list(r.headers.items())[:50]:
+        print(f"{key}: {value}")
         a_dict.update({key: value})
-    redis_db.mset(a_dict)
+
+    try:
+        redis_db.mset(a_dict)
+    except redis.exceptions.ConnectionError as err:
+        print(err)
+
     return jsonify(a_dict)
 
 
