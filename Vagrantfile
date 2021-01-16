@@ -22,6 +22,8 @@ Vagrant.configure("2") do |config|
     jaeger.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh", disabled: true
     jaeger.vm.network "forwarded_port", guest: 22, host: 2000 # Master Node SSH
     jaeger.vm.network "forwarded_port", guest: 6443, host: 6443 # API Access
+    jaeger.vm.network "forwarded_port", guest: 8080, host: 8080 # API Access
+    jaeger.vm.network "forwarded_port", guest: 16686, host: 16686 # Jaeger Access
     for p in 30000..30100 # expose NodePort IP's
       jaeger.vm.network "forwarded_port", guest: p, host: p, protocol: "tcp"
     end
