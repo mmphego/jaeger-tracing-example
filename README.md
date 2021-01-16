@@ -70,6 +70,10 @@ in the `k8s` directory, you will see a subdirectory called `redis`. You deploy b
 
 - `vagrant up`
 
+Apply all yaml files under `k8s\` dir: `kubectl apply -Rf .`
+
+>>> add more info
+
 ## Demos/Screenshots
 
 ![image](https://user-images.githubusercontent.com/7910856/104826622-8e747180-5861-11eb-8a11-8ba4629e17f8.png)
