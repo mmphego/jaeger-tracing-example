@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/venv,python,JupyterNotebooks,SublimeText,VisualStudioCode
-# Edit at https://www.toptal.com/developers/gitignore?templates=venv,python,JupyterNotebooks,SublimeText,VisualStudioCode
+# Created by https://www.toptal.com/developers/gitignore/api/venv,python,JupyterNotebooks,SublimeText,VisualStudioCode,vagrant
+# Edit at https://www.toptal.com/developers/gitignore?templates=venv,python,JupyterNotebooks,SublimeText,VisualStudioCode,vagrant
 
 ### JupyterNotebooks ###
 # gitignore template for Jupyter Notebooks
@@ -185,6 +185,16 @@ bh_unicode_properties.cache
 # https://packagecontrol.io/packages/sublime-github
 GitHub.sublime-settings
 
+### Vagrant ###
+# General
+.vagrant/
+
+# Log files (if you are creating logs in debug mode, uncomment this)
+# *.log
+
+### Vagrant Patch ###
+*.box
+
 ### venv ###
 # Virtualenv
 # http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
@@ -208,4 +218,4 @@ pip-selfcheck.json
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/venv,python,JupyterNotebooks,SublimeText,VisualStudioCode
+# End of https://www.toptal.com/developers/gitignore/api/venv,python,JupyterNotebooks,SublimeText,VisualStudioCode,vagrant
