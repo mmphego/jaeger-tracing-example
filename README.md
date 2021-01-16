@@ -25,16 +25,16 @@ There's also a `deployment` directory, which contains `k8s/` [Kubernetes deploym
 
 Neither have any of the required **tracing components**. You will need to create *spans* to trace in the Flask app and also set up the [*sidecar injection for Jaeger* in the Kubernetes deployment yaml](https://www.jaegertracing.io/docs/1.21/operator/).
 
-- [ ] Examine the code in `app/app.py`.
-- [ ] Modify the Flask application to generate spans on the alpha and beta routes. You should see some starter code for initiating the trace there.
-- [ ] Use `docker build` and `docker push` to build your Dockerfile and push it to your registry.
-- [ ] In the `deployment/k8s` folder, examine `deployment.sample.yaml`.
-- [ ] Change the `deployment.sample.yaml` image to point to your container. Make sure that it is publicly accessible or that you have your authentication credentials set up.
-- [ ] Add the components to `deployment.sample.yaml` in order for it to trace on Jaeger.
-- [ ] In your cluster, create a Jaeger instance to deploy in Kubernetes. You can use the `k8s/jaeger.yaml` file.
-- [ ] Use `kubectl apply` to deploy the deployment yaml.
+- [x] Examine the code in `app/app.py`.
+- [x] Modify the Flask application to generate spans on the alpha and beta routes. You should see some starter code for initiating the trace there.
+- [x] Use `docker build` and `docker push` to build your Dockerfile and push it to your registry.
+- [x] In the `deployment/k8s` folder, examine `deployment.sample.yaml`.
+- [x] Change the `deployment.sample.yaml` image to point to your container. Make sure that it is publicly accessible or that you have your authentication credentials set up.
+- [x] Add the components to `deployment.sample.yaml` in order for it to trace on Jaeger.
+- [x] In your cluster, create a Jaeger instance to deploy in Kubernetes. You can use the `k8s/jaeger.yaml` file.
+- [x] Use `kubectl apply` to deploy the deployment yaml.
 - [ ] Use `kubectl port-forward` to expose both Jaeger (TCP Port 16686) and the Flask application (TCP port 8080).
-Navigate to `http://localhost/`, `http://localhost/alpha` and `http://localhost/beta`  in a browser.
+- [x] Navigate to `http://localhost/`, `http://localhost/alpha` and `http://localhost/beta`  in a browser.
 - [ ] Navigate to your Jaeger UI in the browser and locate the trace.
 
 Now that you have the deployment good to go, it is up to you to find a way to improve the latency of the application. There are many ways to do this and you are welcome to take any approach that achieves the goal of reducing the latency. I've provided one possible approach below, but your solution may be quite different!
@@ -65,6 +65,15 @@ This acts as more of a "catch-all" for your application, so it won't necessarily
 Looking at the `app.py` file, you may have noticed an endpoint named "redis". [Redis](https://redis.io/) is a popular memory store database. It uses a simple key-value structure to store data in memory.
 
 in the `k8s` directory, you will see a subdirectory called `redis`. You deploy both yaml files into your cluster in order to enable a Redis deployment. Then, if you like, you can create a trace on the `redis` endpoint and diagnose why the database write is taking so long.
+
+# Deployment
+
+- `vagrant up`
+
+# Resources
+
+- [How To Implement Distributed Tracing with Jaeger on Kubernetes](https://www.digitalocean.com/community/tutorials/how-to-implement-distributed-tracing-with-jaeger-on-kubernetes)
+- [Best Practices for Deploying Jaeger on Kubernetes in Production](https://thenewstack.io/best-practices-for-deploying-jaeger-on-kubernetes-in-production/)
 
 # Credit
 
