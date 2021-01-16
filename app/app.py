@@ -49,21 +49,37 @@ def hello_world():
 
 @app.route("/alpha")
 def alpha():
-    for i in range(100):
-        # removed the colon here since it caused a syntax error - not sure about its purpose?
-        do_heavy_work()
-        if i % 100 == 99:
-            time.sleep(10)
+    with tracer.start_span("alpha") as span:
+        count = 100
+        timer = 10
+        span.set_tag("iter-tot-count", count)
+        for i in range(count):
+            with tracer.start_span(f"iter_{i}", child_of=span) as site_span:
+                do_heavy_work()
+                if i % 100 == 99:
+                    time.sleep(timer)
+                    site_span.set_tag("request-duration", f"{timer}")
+
     return "This is the Alpha Endpoint!"
 
 
 @app.route("/beta")
 def beta():
-    r = requests.get("https://www.google.com/search?q=python")
-    a_dict = {}
-    for key, value in r.headers.items():
-        print(key, ":", value)
-        a_dict.update({key: value})
+    with tracer.start_span("get-google-search-queries") as span:
+        a_dict = {}
+        req = requests.get("https://www.google.com/search?q=python")
+        span.set_tag("jobs-count", len(req.json()))
+        if req.status_code == 200:
+            span.set_tag("request-type", "Success")
+        else:
+            print("Unable to get site")
+            span.set_tag("request-type", "Failure")
+
+        for key, value in req.headers.items():
+            print(key, ":", value)
+            with tracer.start_span(key["Date"], child_of=span) as date_span:
+                date_span.set_tag("date-change", "Success")
+            a_dict.update({key: value})
     return jsonify(a_dict)
 
 
