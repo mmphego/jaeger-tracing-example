@@ -38,6 +38,10 @@ with tracer.start_span("first-span") as span:
     span.set_tag("first-tag", "100")
 
 
+def do_heavy_work():
+    pass
+
+
 @app.route("/")
 def hello_world():
     return "Hello World!"
