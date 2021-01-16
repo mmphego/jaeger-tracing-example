@@ -1,8 +1,8 @@
+import datetime
 import logging
 import os
-import time
-
 import requests
+import time
 
 import redis
 import redis_opentracing
@@ -13,6 +13,7 @@ from jaeger_client import Config
 app = Flask(__name__)
 
 redis_db = redis.Redis(host="redis-primary.default.svc.cluster.local", port=6379, db=0)
+redis_db.set("last_access", datetime.datetime.now())
 
 
 def init_tracer(service):
@@ -29,12 +30,11 @@ def init_tracer(service):
 
 
 # starter code
-tracer = init_tracer("test-service")
+jaeger_tracer = init_tracer("test-service")
+flask_tracer = FlaskTracing(jaeger_tracer, True, app)
+redis_opentracing.init_tracing(jaeger_tracer, trace_all_classes=False)
 
-# not entirely sure but I believe there's a flask_opentracing.init_tracing() missing here
-redis_opentracing.init_tracing(tracer, trace_all_classes=False)
-
-with tracer.start_span("first-span") as span:
+with jaeger_tracer.start_span("first-span") as span:
     span.set_tag("first-tag", "100")
 
 
@@ -43,18 +43,20 @@ def do_heavy_work():
 
 
 @app.route("/")
+@flask_tracer.trace()
 def hello_world():
     return "Hello World!"
 
 
 @app.route("/alpha")
+@flask_tracer.trace()
 def alpha():
-    with tracer.start_span("alpha") as span:
+    with jaeger_tracer.start_span("alpha-endpoint") as span:
         count = 100
         timer = 10
         span.set_tag("iter-tot-count", count)
         for i in range(count):
-            with tracer.start_span(f"iter_{i}", child_of=span) as site_span:
+            with jaeger_tracer.start_span(f"iter_{i}", child_of=span) as site_span:
                 do_heavy_work()
                 if i % 100 == 99:
                     time.sleep(timer)
@@ -64,11 +66,13 @@ def alpha():
 
 
 @app.route("/beta")
+@flask_tracer.trace()
 def beta():
-    with tracer.start_span("get-google-search-queries") as span:
+    with jaeger_tracer.start_span("get-google-search-queries") as span:
         a_dict = {}
         req = requests.get("https://www.google.com/search?q=python")
         span.set_tag("jobs-count", len(req.json()))
+        span.log_kv({"event": "req-status", "result": req.status_code})
         if req.status_code == 200:
             span.set_tag("request-type", "Success")
         else:
@@ -77,7 +81,8 @@ def beta():
 
         for key, value in req.headers.items():
             print(key, ":", value)
-            with tracer.start_span(key["Date"], child_of=span) as date_span:
+            span.log_kv({"event": "headers", "result": f"{key}: {value}"})
+            with jaeger_tracer.start_span(key["Date"], child_of=span) as date_span:
                 date_span.set_tag("date-change", "Success")
             a_dict.update({key: value})
     return jsonify(a_dict)
