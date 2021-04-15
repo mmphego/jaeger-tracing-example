@@ -33,9 +33,9 @@ Neither have any of the required **tracing components**. You will need to create
 - [x] Add the components to `deployment.sample.yaml` in order for it to trace on Jaeger.
 - [x] In your cluster, create a Jaeger instance to deploy in Kubernetes. You can use the `k8s/jaeger.yaml` file.
 - [x] Use `kubectl apply` to deploy the deployment yaml.
-- [ ] Use `kubectl port-forward` to expose both Jaeger (TCP Port 16686) and the Flask application (TCP port 8080).
+- [x] Use `kubectl port-forward` to expose both Jaeger (TCP Port 16686) and the Flask application (TCP port 8080).
 - [x] Navigate to `http://localhost/`, `http://localhost/alpha` and `http://localhost/beta`  in a browser.
-- [ ] Navigate to your Jaeger UI in the browser and locate the trace.
+- [x] Navigate to your Jaeger UI in the browser and locate the trace.
 
 Now that you have the deployment good to go, it is up to you to find a way to improve the latency of the application. There are many ways to do this and you are welcome to take any approach that achieves the goal of reducing the latency. I've provided one possible approach below, but your solution may be quite different!
 
@@ -69,6 +69,20 @@ in the `k8s` directory, you will see a subdirectory called `redis`. You deploy b
 # Deployment
 
 - `vagrant up`
+
+Apply all yaml files under `k8s\` dir: `kubectl apply -Rf .`
+
+>>> add more info
+
+## Demos/Screenshots
+
+![image](https://user-images.githubusercontent.com/7910856/104826622-8e747180-5861-11eb-8a11-8ba4629e17f8.png)
+![image](https://user-images.githubusercontent.com/7910856/104826774-992f0680-5861-11eb-80a8-1696ea2037df.png)
+![image](https://user-images.githubusercontent.com/7910856/104826942-b19f2100-5861-11eb-9d0a-e4c1383ffe44.png)
+![image](https://user-images.githubusercontent.com/7910856/104826952-c8de0e80-5861-11eb-8e27-6b7867e5107a.png)
+![image](https://user-images.githubusercontent.com/7910856/104826962-dd220b80-5861-11eb-9bd7-2a85a2ba8535.png)
+![image](https://user-images.githubusercontent.com/7910856/104826982-00e55180-5862-11eb-8e8d-7aec8926bf73.png)
+
 
 # Resources
 
