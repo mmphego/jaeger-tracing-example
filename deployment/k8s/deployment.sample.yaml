@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: hello-app
-        image: mmphego/jaeger-tracing-example
+        image: mmphego/jaeger-tracing-example:v2
         # This app listens on port 8080 for web traffic by default.
         ports:
         - containerPort: 8080
