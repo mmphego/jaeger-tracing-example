@@ -13,7 +13,7 @@ from jaeger_client import Config
 app = Flask(__name__)
 
 redis_db = redis.Redis(host="redis-primary.default.svc.cluster.local", port=6379, db=0)
-redis_db.set("last_access", datetime.datetime.now())
+redis_db.set("last_access", str(datetime.datetime.now()))
 
 
 def init_tracer(service):
