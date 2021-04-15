@@ -13,6 +13,9 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
+  # config.ssh.username = 'root'
+  # config.ssh.password = 'vagrant'
+  # config.ssh.insert_key = 'true'
 
   config.vm.define "jaeger" do |jaeger|
     jaeger.vm.box = default_box
@@ -31,14 +34,16 @@ Vagrant.configure("2") do |config|
       # v.memory = "3072"
       vb.memory = "2048"
       vb.name = "jaeger"
+      # https://stackoverflow.com/a/17126363
+      vb.customize ["modifyvm", :id, "--ioapic", "on"]
     end
 
     jaeger.vm.provision "shell", inline: <<-SHELL
       echo "******** Installing dependencies ********"
       sudo zypper refresh
-      sudo zypper --quite --non-interactive install bzip2
-      sudo zypper --quite --non-interactive install etcd
-      sudo zypper --quite --non-interactive install lsof
+      sudo zypper --non-interactive install bzip2
+      sudo zypper --non-interactive install etcd
+      sudo zypper --non-interactive install lsof
 
       echo "******** Begin installing k3s ********"
       curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.19.2+k3s1 K3S_KUBECONFIG_MODE="644" sh -
